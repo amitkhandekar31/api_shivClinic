@@ -8,6 +8,11 @@ const serverless = require('serverless-http');
 const app = express();
 const bodyParser = require('body-parser');
 
+const handler = () =>
+  fetch("/.netlify/functions/node-fetch", { headers: { accept: "Accept: application/json" } })
+    .then((x) => x.json())
+    .then(({ msg }) => setMsg(msg))
+
 const router = express.Router();
 router.get('/', (req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/html' });
@@ -64,6 +69,9 @@ router.get('/', (req, res) => {
 
 	}) 
 // 
+var cors = require('cors')
+
+app.use(cors()) // Use this after the variable declaration
 
 app.use(bodyParser.json());
 app.use('/.netlify/functions/server', router);  // path must route to lambda
